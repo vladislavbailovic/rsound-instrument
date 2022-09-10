@@ -4,6 +4,14 @@ pub trait Envelope {
     }
 }
 
+pub struct Fixed;
+
+impl Envelope for Fixed {
+    fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
+        volume
+    }
+}
+
 struct ASR {
     attack: f64,
     release: f64,
