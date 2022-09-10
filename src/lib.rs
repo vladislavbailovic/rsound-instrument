@@ -6,7 +6,7 @@ use envelope::*;
 
 const SAMPLE_RATE: i32 = 44100;
 
-struct Instrument<T, U>
+pub struct Instrument<T, U>
 where
     T: Generator,
     U: Envelope,
@@ -20,6 +20,13 @@ where
     T: Generator,
     U: Envelope,
 {
+    pub fn new(generator: T, envelope: U) -> Self {
+        Self {
+            generator,
+            envelope,
+        }
+    }
+
     pub fn play(&self, frequency: f64, duration: f64, volume: f64) -> Vec<f64> {
         let mut samples: Vec<f64> = Vec::new();
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
