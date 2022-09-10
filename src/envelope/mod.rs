@@ -20,13 +20,13 @@ struct ASR {
 impl Envelope for ASR {
     fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
         if t < self.attack {
-            return volume * (t/self.attack);
+            return volume * (t / self.attack);
         }
 
         let minr = duration - self.release;
         if t > minr {
             let posr = duration - t;
-            return volume * (posr/self.release);
+            return volume * (posr / self.release);
         }
 
         volume
