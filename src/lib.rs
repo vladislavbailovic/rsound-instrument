@@ -1,7 +1,7 @@
-mod generator;
+pub mod generator;
 use generator::*;
 
-mod envelope;
+pub mod envelope;
 use envelope::*;
 
 const SAMPLE_RATE: i32 = 44100;
