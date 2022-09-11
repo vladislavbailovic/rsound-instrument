@@ -4,11 +4,36 @@ pub trait Generator {
     fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64;
 }
 
+#[derive(Default)]
 pub struct Sine;
 
 impl Generator for Sine {
     fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
         volume * (frequency * t * 2.0 * PI).sin()
+    }
+}
+
+#[derive(Default)]
+pub struct Square {
+    sine: Sine,
+}
+
+impl Generator for Square {
+    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
+        if self.sine.sample_at(t, frequency, 1.0) > 0.0 {
+            volume
+        } else {
+            volume * -1.0
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct Triangle;
+
+impl Generator for Triangle {
+    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
+        (2.0 * volume / PI) * (frequency * t * 2.0 * PI).sin().asin()
     }
 }
 
@@ -18,15 +43,17 @@ pub struct DoubleSine {
 }
 impl DoubleSine {
     pub fn new() -> Self {
-        Self{ sine: Sine{}, detune: Sine{} }
+        Self {
+            sine: Sine {},
+            detune: Sine {},
+        }
     }
 }
 impl Generator for DoubleSine {
     fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
-        volume * (
-            self.sine.sample_at(t, frequency, 1.0) +
-            self.detune.sample_at(t, frequency * 10.0, 1.0)
-        )
+        volume
+            * (self.sine.sample_at(t, frequency, 1.0)
+                + self.detune.sample_at(t, frequency * 30.0, 0.5))
     }
 }
 
