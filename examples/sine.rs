@@ -10,10 +10,16 @@ use graph::{Block, Graph, Line};
 
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
-    let synth = Instrument::new(generator::Sine {}, envelope::Fixed {});
-    let values: Vec<Block> = synth.play(440.0, 0.01, 1.0)
+    let synth = Instrument::new(generator::DoubleSine::new(), envelope::Fixed {});
+    let sound = synth.play(440.0, 0.01, 1.0);
+    let minimum = sound
+        .iter()
+        .filter_map(|&x| Some(x))
+        .reduce(f64::min)
+        .expect("there has to be minimum");
+    let values: Vec<Block> = sound
     .iter()
-    .map(|y| Block::new(1.0, y + 1.0))
+    .map(|y| Block::new(1.0, y + minimum.abs()))
     .collect();
 
     let hits = Line::new(&values);

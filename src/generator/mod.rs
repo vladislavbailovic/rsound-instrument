@@ -12,6 +12,24 @@ impl Generator for Sine {
     }
 }
 
+pub struct DoubleSine {
+    sine: Sine,
+    detune: Sine,
+}
+impl DoubleSine {
+    pub fn new() -> Self {
+        Self{ sine: Sine{}, detune: Sine{} }
+    }
+}
+impl Generator for DoubleSine {
+    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
+        volume * (
+            self.sine.sample_at(t, frequency, 1.0) +
+            self.detune.sample_at(t, frequency * 10.0, 1.0)
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
