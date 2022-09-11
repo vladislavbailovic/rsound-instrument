@@ -9,8 +9,9 @@ use graph::{Block, Graph, Line};
 
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
-    let synth = Instrument::new(generator::Sine::default(), envelope::Fixed {});
-    let sound = synth.play(440.0, 0.01, 1.0);
+    let envelope = envelope::ASR::new(0.015, 0.07);
+    let synth = Instrument::new(generator::Sine::default(), envelope);
+    let sound = synth.play(440.0, 0.1, 1.0);
     let minimum = sound
         .iter()
         .filter_map(|&x| Some(x))
@@ -18,6 +19,7 @@ fn main() -> std::io::Result<()> {
         .expect("there has to be minimum");
     let values: Vec<Block> = sound
         .iter()
+        .step_by(10)
         .map(|y| Block::new(1.0, y + minimum.abs()))
         .collect();
 
