@@ -37,23 +37,12 @@ impl Generator for Triangle {
     }
 }
 
-pub struct DoubleSine {
-    sine: Sine,
-    detune: Sine,
-}
-impl DoubleSine {
-    pub fn new() -> Self {
-        Self {
-            sine: Sine {},
-            detune: Sine {},
-        }
-    }
-}
-impl Generator for DoubleSine {
+#[derive(Default)]
+pub struct Saw;
+
+impl Generator for Saw {
     fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
-        volume
-            * (self.sine.sample_at(t, frequency, 1.0)
-                + self.detune.sample_at(t, frequency * 30.0, 0.5))
+        volume * (2.0 / PI) * (frequency * PI * (t % (1.0 / frequency)) - (PI / 2.0))
     }
 }
 
