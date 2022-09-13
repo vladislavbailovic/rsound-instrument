@@ -1,4 +1,5 @@
 use instrument::*;
+use note::*;
 
 #[cfg(feature = "graph")]
 use graph::svg::Renderer;
@@ -11,7 +12,7 @@ use graph::{Block, Graph, Line};
 fn main() -> std::io::Result<()> {
     let envelope = envelope::ASR::new(0.015, 0.07);
     let synth = Instrument::new(generator::Simple::default(), envelope);
-    let sound = synth.play(440.0, 0.1, 1.0);
+    let sound = synth.play(90.0, note![A: C0, 1 / 4], 1.0);
     let minimum = sound
         .iter()
         .filter_map(|&x| Some(x))

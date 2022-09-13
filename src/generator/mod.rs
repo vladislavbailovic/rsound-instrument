@@ -1,13 +1,39 @@
 pub mod chain;
 
 use crate::oscillator::Oscillator;
+use crate::SAMPLE_RATE;
+use note::Note;
 
 pub trait Generator {
-    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64;
+    fn play(&self, bpm: f64, note: Note) -> Vec<f64>;
 }
 
 pub trait Signal {
     fn value_at(&self, t: f64, frequency: f64) -> f64;
+}
+
+pub trait Synth: Signal {}
+
+impl<T> Generator for T
+where
+    T: Synth,
+{
+    fn play(&self, bpm: f64, note: Note) -> Vec<f64> {
+        let duration = note.secs(bpm as f32) as f64;
+        let frequency = note.freq();
+        // TODO: optimize this
+        let mut samples: Vec<f64> = Vec::new();
+        let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
+        for i in 0..sample_duration {
+            let t = i as f64 / SAMPLE_RATE as f64;
+            if let Some(freq) = frequency {
+                samples.push(self.value_at(t, freq));
+            } else {
+                samples.push(0.0)
+            }
+        }
+        samples
+    }
 }
 
 pub struct Simple {
@@ -22,11 +48,13 @@ impl Default for Simple {
     }
 }
 
-impl Generator for Simple {
-    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
-        volume * self.osc.get(frequency).at(t)
+impl Signal for Simple {
+    fn value_at(&self, t: f64, frequency: f64) -> f64 {
+        self.osc.get(frequency).at(t)
     }
 }
+
+impl Synth for Simple {}
 
 impl Simple {
     pub fn square() -> Self {

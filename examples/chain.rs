@@ -1,5 +1,6 @@
 use instrument::oscillator::*;
 use instrument::*;
+use note::*;
 
 #[cfg(feature = "graph")]
 use graph::svg::Renderer;
@@ -18,7 +19,8 @@ fn main() -> std::io::Result<()> {
     // chain.sub(lfo::LFO::triangle(31.0));
     chain.sub(elfo);
     let synth = Instrument::new(chain, envelope);
-    let sound = synth.play(440.0, 0.1, 1.0);
+    let sound = synth.play(90.0, note![A: C4, 1 / 1], 1.0);
+
     let minimum = sound
         .iter()
         .filter_map(|&x| Some(x))

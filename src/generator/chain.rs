@@ -10,18 +10,18 @@ pub struct Chain {
     mods: Vec<Operator>,
 }
 
-impl Generator for Chain {
-    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
-        volume
-            * self
-                .mods
-                .iter()
-                .fold(self.base.get(frequency).at(t), |val, x| match x {
-                    Operator::Add(x) => val + x.value_at(t, frequency),
-                    Operator::Sub(x) => val - x.value_at(t, frequency),
-                })
+impl Signal for Chain {
+    fn value_at(&self, t: f64, frequency: f64) -> f64 {
+        self.mods
+            .iter()
+            .fold(self.base.get(frequency).at(t), |val, x| match x {
+                Operator::Add(x) => val + x.value_at(t, frequency),
+                Operator::Sub(x) => val - x.value_at(t, frequency),
+            })
     }
 }
+
+impl Synth for Chain {}
 
 impl Default for Chain {
     fn default() -> Self {
