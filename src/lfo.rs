@@ -1,6 +1,6 @@
 use crate::envelope;
 use crate::oscillator::Osc;
-use crate::Generator;
+use crate::Signal;
 
 pub struct LFO {
     shape: Osc,
@@ -29,14 +29,15 @@ impl LFO {
     }
 }
 
-impl Generator for LFO {
-    fn sample_at(&self, t: f64, _frequency: f64, volume: f64) -> f64 {
-        volume * self.shape.at(t)
+impl Signal for LFO {
+    fn value_at(&self, t: f64, _frequency: f64) -> f64 {
+        self.shape.at(t)
     }
 }
 
 pub struct ELFO {
     lfo: LFO,
+    // TODO: with envelope::Fixed, LFO not needed?
     envelope: Box<dyn envelope::Envelope>,
 }
 
@@ -72,9 +73,8 @@ impl ELFO {
     }
 }
 
-impl Generator for ELFO {
-    fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64 {
-        self.envelope.value_at(t, volume, self.envelope.min())
-            * self.lfo.sample_at(t, frequency, volume)
+impl Signal for ELFO {
+    fn value_at(&self, t: f64, frequency: f64) -> f64 {
+        self.envelope.value_at(t, 1.0, self.envelope.min()) * self.lfo.value_at(t, frequency)
     }
 }

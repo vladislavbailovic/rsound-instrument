@@ -1,8 +1,8 @@
 use super::*;
 
 enum Operator {
-    Add(Box<dyn Generator>),
-    Sub(Box<dyn Generator>),
+    Add(Box<dyn Signal>),
+    Sub(Box<dyn Signal>),
 }
 
 pub struct Chain {
@@ -17,8 +17,8 @@ impl Generator for Chain {
                 .mods
                 .iter()
                 .fold(self.base.get(frequency).at(t), |val, x| match x {
-                    Operator::Add(x) => val + x.sample_at(t, frequency, volume),
-                    Operator::Sub(x) => val - x.sample_at(t, frequency, volume),
+                    Operator::Add(x) => val + x.value_at(t, frequency),
+                    Operator::Sub(x) => val - x.value_at(t, frequency),
                 })
     }
 }
@@ -39,11 +39,11 @@ impl Chain {
             mods: Vec::new(),
         }
     }
-    pub fn add(&mut self, what: impl Generator + 'static) -> &mut Self {
+    pub fn add(&mut self, what: impl Signal + 'static) -> &mut Self {
         self.mods.push(Operator::Add(Box::new(what)));
         self
     }
-    pub fn sub(&mut self, what: impl Generator + 'static) -> &mut Self {
+    pub fn sub(&mut self, what: impl Signal + 'static) -> &mut Self {
         self.mods.push(Operator::Sub(Box::new(what)));
         self
     }

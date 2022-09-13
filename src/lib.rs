@@ -30,6 +30,7 @@ where
         }
     }
 
+    // TODO: play should take a note
     pub fn play(&self, frequency: f64, duration: f64, volume: f64) -> Vec<f64> {
         let mut samples: Vec<f64> = Vec::new();
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;

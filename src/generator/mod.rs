@@ -6,6 +6,10 @@ pub trait Generator {
     fn sample_at(&self, t: f64, frequency: f64, volume: f64) -> f64;
 }
 
+pub trait Signal {
+    fn value_at(&self, t: f64, frequency: f64) -> f64;
+}
+
 pub struct Simple {
     osc: Oscillator,
 }
