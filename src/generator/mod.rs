@@ -7,12 +7,14 @@ pub trait Generator {
 }
 
 pub struct Simple {
-    osc: Oscillator
+    osc: Oscillator,
 }
 
 impl Default for Simple {
     fn default() -> Self {
-        Self{ osc: Oscillator::Sine }
+        Self {
+            osc: Oscillator::Sine,
+        }
     }
 }
 
@@ -24,7 +26,9 @@ impl Generator for Simple {
 
 impl Simple {
     pub fn square() -> Self {
-        Self{ osc: Oscillator::Square }
+        Self {
+            osc: Oscillator::Square,
+        }
     }
 }
 

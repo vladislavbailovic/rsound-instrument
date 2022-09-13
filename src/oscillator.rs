@@ -30,9 +30,17 @@ impl Osc {
     pub fn at(&self, t: f64) -> f64 {
         match self {
             Self::Sine(frequency) => (frequency * t * 2.0 * PI).sin(),
-            Self::Square(frequency) => if (Self::Sine(*frequency)).at(t) > 0.0 { 1.0 } else { -1.0 },
+            Self::Square(frequency) => {
+                if (Self::Sine(*frequency)).at(t) > 0.0 {
+                    1.0
+                } else {
+                    -1.0
+                }
+            }
             Self::Triangle(frequency) => (2.0 / PI) * (frequency * t * 2.0 * PI).sin().asin(),
-            Self::Saw(frequency) => (2.0 / PI) * (frequency * PI * (t % (1.0 / frequency)) - (PI / 2.0)),
+            Self::Saw(frequency) => {
+                (2.0 / PI) * (frequency * PI * (t % (1.0 / frequency)) - (PI / 2.0))
+            }
         }
     }
 }

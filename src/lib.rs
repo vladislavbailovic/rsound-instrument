@@ -1,3 +1,6 @@
+pub mod lfo;
+pub mod oscillator;
+
 pub mod generator;
 use generator::*;
 
