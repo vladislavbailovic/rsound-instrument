@@ -11,9 +11,12 @@ use graph::{Block, Graph, Line};
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
     let envelope = envelope::ASR::new(0.015, 0.07);
+    // let envelope = envelope::Fixed{};
     let mut chain = generator::chain::Chain::new(Oscillator::Square);
+    let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::ASR::new(0.0, 0.15));
     chain.add(lfo::LFO::sine(12.0));
-    chain.sub(lfo::LFO::triangle(31.0));
+    // chain.sub(lfo::LFO::triangle(31.0));
+    // chain.sub(elfo);
     let synth = Instrument::new(chain, envelope);
     let sound = synth.play(440.0, 0.1, 1.0);
     let minimum = sound
