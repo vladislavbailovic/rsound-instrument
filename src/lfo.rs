@@ -75,6 +75,13 @@ impl ELFO {
 
 impl Signal for ELFO {
     fn value_at(&self, t: f64, frequency: f64) -> f64 {
-        self.envelope.value_at(t, 1.0, self.envelope.min()) * self.lfo.value_at(t, frequency)
+        let cycle_length = self.envelope.min();
+        let diff = if t > cycle_length {
+            t - ((t / cycle_length).floor() * cycle_length)
+        } else {
+            t
+        };
+
+        self.envelope.value_at(diff, 1.0, cycle_length) * self.lfo.value_at(t, frequency)
     }
 }
