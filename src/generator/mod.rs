@@ -20,19 +20,17 @@ where
 {
     fn play(&self, bpm: f64, note: Note) -> Vec<f64> {
         let duration = note.secs(bpm);
-        let frequency = note.freq();
+        let frequency = if let Some(f) = note.freq() { f } else { 0.0 };
 
-        // TODO: optimize this
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
         let mut samples: Vec<f64> = vec![0.0; sample_duration];
+        if frequency == 0.0 {
+            return samples;
+        }
 
         for i in 0..sample_duration {
             let t = i as f64 / SAMPLE_RATE as f64;
-            if let Some(freq) = frequency {
-                samples.push(self.value_at(t, freq));
-            } else {
-                samples.push(0.0)
-            }
+            samples.push(self.value_at(t, frequency));
         }
         samples
     }
@@ -78,7 +76,8 @@ mod tests {
         let osc = Simple::default();
 
         let start = Instant::now();
-        osc.play(1.5, note![A: C0, 1/1]);
+        osc.play(3.0, pause![1 / 1]);
+        osc.play(3.0, note![A: C0, 1 / 1]);
         eprintln!("duration: {}ms", start.elapsed().as_millis());
     }
 }
