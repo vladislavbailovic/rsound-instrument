@@ -11,24 +11,20 @@ use note::Note;
 
 const SAMPLE_RATE: i32 = 44100;
 
-pub struct Instrument<T, U>
-where
-    T: Generator,
-    U: Envelope,
-{
-    generator: T,
-    envelope: U,
+pub struct Instrument {
+    generator: Box<dyn Generator>,
+    envelope: Box<dyn Envelope>,
 }
 
-impl<T, U> Instrument<T, U>
-where
-    T: Generator,
-    U: Envelope,
-{
-    pub fn new(generator: T, envelope: U) -> Self {
+impl Instrument {
+    pub fn new<T, U>(generator: T, envelope: U) -> Self
+    where
+        T: Generator + 'static,
+        U: Envelope + 'static,
+    {
         Self {
-            generator,
-            envelope,
+            generator: Box::new(generator),
+            envelope: Box::new(envelope),
         }
     }
 
@@ -48,15 +44,13 @@ where
     }
 }
 
-pub struct Rack<T: Generator, U: Envelope> {
-    instruments: Vec<Instrument<T, U>>
+#[derive(Default)]
+pub struct Rack {
+    instruments: Vec<Instrument>,
 }
-impl<T: Generator, U: Envelope> Rack<T, U> {
-    pub fn new() -> Self {
-        Self{ instruments: Vec::new() }
-    }
 
-    pub fn add(&mut self, i: Instrument<T, U>) {
+impl Rack {
+    pub fn add(&mut self, i: Instrument) {
         self.instruments.push(i);
     }
 
@@ -65,10 +59,12 @@ impl<T: Generator, U: Envelope> Rack<T, U> {
         let duration = note.secs(bpm);
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
         let mut samples = vec![vec![0.0; instrs]; sample_duration];
-        self.instruments.iter().enumerate()
-            .for_each(|(i, x)| {
-                x.play(bpm, note, volume).iter().enumerate().for_each(|(s, &y)| samples[s][i] = y);
-            });
+        self.instruments.iter().enumerate().for_each(|(i, x)| {
+            x.play(bpm, note, volume)
+                .iter()
+                .enumerate()
+                .for_each(|(s, &y)| samples[s][i] = y);
+        });
         samples.iter().map(|x| x.iter().sum()).collect()
     }
 }
