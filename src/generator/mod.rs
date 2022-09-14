@@ -19,7 +19,7 @@ where
     T: Synth,
 {
     fn play(&self, bpm: f64, note: Note) -> Vec<f64> {
-        let duration = note.secs(bpm as f32) as f64;
+        let duration = note.secs(bpm);
         let frequency = note.freq();
         // TODO: optimize this
         let mut samples: Vec<f64> = Vec::new();

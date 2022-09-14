@@ -33,7 +33,7 @@ where
     }
 
     pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
-        let duration = note.secs(bpm as f32) as f64;
+        let duration = note.secs(bpm);
         self.generator
             .play(bpm, note)
             .iter()
