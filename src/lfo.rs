@@ -37,7 +37,6 @@ impl Signal for LFO {
 
 pub struct ELFO {
     lfo: LFO,
-    // TODO: with envelope::Fixed, LFO not needed?
     envelope: Box<dyn envelope::Envelope>,
 }
 
