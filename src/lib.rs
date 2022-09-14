@@ -46,12 +46,16 @@ impl Instrument {
 
 #[derive(Default)]
 pub struct Rack {
-    instruments: Vec<Instrument>,
+    instruments: Vec<(Instrument, f64)>,
 }
 
 impl Rack {
     pub fn add(&mut self, i: Instrument) {
-        self.instruments.push(i);
+        self.instruments.push((i, 1.0));
+    }
+
+    pub fn add_with_volume(&mut self, i: Instrument, volume: f64) {
+        self.instruments.push((i, volume));
     }
 
     pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
@@ -60,7 +64,7 @@ impl Rack {
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
         let mut samples = vec![vec![0.0; instrs]; sample_duration];
         self.instruments.iter().enumerate().for_each(|(i, x)| {
-            x.play(bpm, note, volume)
+            x.0.play(bpm, note, volume * x.1)
                 .iter()
                 .enumerate()
                 .for_each(|(s, &y)| samples[s][i] = y);

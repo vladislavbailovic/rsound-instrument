@@ -1,5 +1,5 @@
-use instrument::*;
 use instrument::oscillator::*;
+use instrument::*;
 use note::*;
 
 #[cfg(feature = "graph")]
@@ -27,7 +27,7 @@ fn main() -> std::io::Result<()> {
     chain.sub(lfo::LFO::triangle(131.0));
     chain.sub(elfo);
     let synth = Instrument::new(chain, envelope);
-    rack.add(synth);
+    rack.add_with_volume(synth, 0.2);
 
     let sound = rack.play(90.0, note![A: C4, 1 / 16], 1.0);
 
