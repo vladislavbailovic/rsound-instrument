@@ -16,10 +16,10 @@ fn main() -> std::io::Result<()> {
     let mut chain = generator::chain::Chain::new(Oscillator::Square);
     let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::ASR::new(0.0, 0.15));
     chain.add(lfo::LFO::sine(12.0));
-    // chain.sub(lfo::LFO::triangle(31.0));
+    chain.sub(lfo::LFO::triangle(131.0));
     chain.sub(elfo);
     let synth = Instrument::new(chain, envelope);
-    let sound = synth.play(90.0, note![A: C4, 1 / 1], 1.0);
+    let sound = synth.play(90.0, note![A: C4, 1 / 16], 1.0);
 
     let minimum = sound
         .iter()

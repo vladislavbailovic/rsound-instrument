@@ -23,16 +23,19 @@ where
         let frequency = if let Some(f) = note.freq() { f } else { 0.0 };
 
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
-        let mut samples: Vec<f64> = vec![0.0; sample_duration];
+        let samples: Vec<f64> = vec![0.0; sample_duration];
         if frequency == 0.0 {
             return samples;
         }
 
-        for i in 0..sample_duration {
-            let t = i as f64 / SAMPLE_RATE as f64;
-            samples[i] = self.value_at(t, frequency);
-        }
         samples
+            .iter()
+            .enumerate()
+            .map(|(i, _)| {
+                let t = i as f64 / SAMPLE_RATE as f64;
+                self.value_at(t, frequency)
+            })
+            .collect()
     }
 }
 
