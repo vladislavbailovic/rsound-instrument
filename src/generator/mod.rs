@@ -30,7 +30,7 @@ where
 
         for i in 0..sample_duration {
             let t = i as f64 / SAMPLE_RATE as f64;
-            samples.push(self.value_at(t, frequency));
+            samples[i] = self.value_at(t, frequency);
         }
         samples
     }
