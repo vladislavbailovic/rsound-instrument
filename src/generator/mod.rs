@@ -71,10 +71,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn sine_values() {
+    fn synth_benchmark() {
+        use note::*;
+        use std::time::Instant;
+
         let osc = Simple::default();
-        for t in 0..10 {
-            eprintln!("{}: {}", t, osc.sample_at(t as f64, 440.0, 1.0));
-        }
+
+        let start = Instant::now();
+        osc.play(1.5, note![A: C0, 1/1]);
+        eprintln!("duration: {}ms", start.elapsed().as_millis());
     }
 }
