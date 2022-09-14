@@ -48,11 +48,27 @@ where
     }
 }
 
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+pub struct Rack<T: Generator, U: Envelope> {
+    instruments: Vec<Instrument<T, U>>
+}
+impl<T: Generator, U: Envelope> Rack<T, U> {
+    pub fn new() -> Self {
+        Self{ instruments: Vec::new() }
+    }
+
+    pub fn add(&mut self, i: Instrument<T, U>) {
+        self.instruments.push(i);
+    }
+
+    pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
+        let instrs = self.instruments.len();
+        let duration = note.secs(bpm);
+        let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
+        let mut samples = vec![vec![0.0; instrs]; sample_duration];
+        self.instruments.iter().enumerate()
+            .for_each(|(i, x)| {
+                x.play(bpm, note, volume).iter().enumerate().for_each(|(s, &y)| samples[s][i] = y);
+            });
+        samples.iter().map(|x| x.iter().sum()).collect()
     }
 }
