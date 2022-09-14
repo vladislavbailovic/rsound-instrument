@@ -21,9 +21,11 @@ where
     fn play(&self, bpm: f64, note: Note) -> Vec<f64> {
         let duration = note.secs(bpm);
         let frequency = note.freq();
+
         // TODO: optimize this
-        let mut samples: Vec<f64> = Vec::new();
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
+        let mut samples: Vec<f64> = vec![0.0; sample_duration];
+
         for i in 0..sample_duration {
             let t = i as f64 / SAMPLE_RATE as f64;
             if let Some(freq) = frequency {
