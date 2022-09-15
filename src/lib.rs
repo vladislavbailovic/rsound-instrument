@@ -59,9 +59,10 @@ impl Rack {
     }
 
     pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
-        let instrs = self.instruments.len();
         let duration = note.secs(bpm);
         let sample_duration = (SAMPLE_RATE as f64 * duration).floor() as usize;
+        /*
+        let instrs = self.instruments.len();
         let mut samples = vec![vec![0.0; instrs]; sample_duration];
         self.instruments.iter().enumerate().for_each(|(i, x)| {
             x.0.play(bpm, note, volume * x.1)
@@ -70,5 +71,14 @@ impl Rack {
                 .for_each(|(s, &y)| samples[s][i] = y);
         });
         samples.iter().map(|x| x.iter().sum()).collect()
+        */
+
+        let mut result = vec![0.0; sample_duration];
+        for instr in &self.instruments {
+            for (i, val) in instr.0.play(bpm, note, volume * instr.1).iter().enumerate() {
+                result[i] += val;
+            }
+        }
+        result
     }
 }
