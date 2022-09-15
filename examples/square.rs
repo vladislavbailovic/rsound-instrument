@@ -10,7 +10,7 @@ use graph::{Block, Graph, Line};
 
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
-    let synth = Instrument::new(generator::Simple::square(), envelope::Fixed {});
+    let synth = Instrument::new(generator::simple::Simple::square(), envelope::Fixed {});
     let sound = synth.play(90.0, note![A: C2, 1 / 64], 1.0);
     let minimum = sound
         .iter()

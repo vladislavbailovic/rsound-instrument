@@ -1,4 +1,5 @@
 use super::*;
+use crate::oscillator::Oscillator;
 
 enum Operator {
     Add(Box<dyn Signal>),

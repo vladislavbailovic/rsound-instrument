@@ -1,6 +1,6 @@
 pub mod chain;
+pub mod simple;
 
-use crate::oscillator::Oscillator;
 use crate::SAMPLE_RATE;
 use note::Note;
 
@@ -36,51 +36,5 @@ where
                 self.value_at(t, frequency)
             })
             .collect()
-    }
-}
-
-pub struct Simple {
-    osc: Oscillator,
-}
-
-impl Default for Simple {
-    fn default() -> Self {
-        Self {
-            osc: Oscillator::Sine,
-        }
-    }
-}
-
-impl Signal for Simple {
-    fn value_at(&self, t: f64, frequency: f64) -> f64 {
-        self.osc.get(frequency).at(t)
-    }
-}
-
-impl Synth for Simple {}
-
-impl Simple {
-    pub fn square() -> Self {
-        Self {
-            osc: Oscillator::Square,
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn synth_benchmark() {
-        use note::*;
-        use std::time::Instant;
-
-        let osc = Simple::default();
-
-        let start = Instant::now();
-        osc.play(3.0, pause![1 / 1]);
-        osc.play(3.0, note![A: C0, 1 / 1]);
-        eprintln!("duration: {}ms", start.elapsed().as_millis());
     }
 }

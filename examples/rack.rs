@@ -15,9 +15,9 @@ fn main() -> std::io::Result<()> {
     let e2 = envelope::ASR::new(0.1, 0.0);
 
     let mut rack = Rack::default();
-    let s1 = Instrument::new(generator::Simple::default(), e1);
+    let s1 = Instrument::new(generator::simple::Simple::default(), e1);
     rack.add(s1);
-    let s2 = Instrument::new(generator::Simple::square(), e2);
+    let s2 = Instrument::new(generator::simple::Simple::square(), e2);
     rack.add(s2);
 
     let envelope = envelope::ASR::new(0.015, 0.07);
