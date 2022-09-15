@@ -17,10 +17,7 @@ fn main() -> std::io::Result<()> {
     rack.add(s1);
     let s2 = Instrument::new(generator::detuned::Semitones::square(3), envelope::Fixed {});
     rack.add(s2);
-    let s3 = Instrument::new(
-        generator::detuned::Semitones::square(-3),
-        envelope::Fixed {},
-    );
+    let s3 = Instrument::new(generator::detuned::Freq::square(13.0), envelope::Fixed {});
     rack.add(s3);
 
     let sound = rack.play(90.0, note![A: C4, 1 / 16], 1.0);

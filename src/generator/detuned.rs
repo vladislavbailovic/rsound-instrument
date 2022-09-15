@@ -2,6 +2,29 @@ use super::*;
 use note::*;
 use simple::Simple;
 
+pub struct Freq {
+    source: Simple,
+    detune: f64,
+}
+
+impl Signal for Freq {
+    fn value_at(&self, t: f64, frequency: f64) -> f64 {
+        let frequency = frequency + self.detune;
+        self.source.value_at(t, frequency)
+    }
+}
+
+impl Synth for Freq {}
+
+impl Freq {
+    pub fn square(by: f64) -> Self {
+        Self {
+            source: Simple::square(),
+            detune: by,
+        }
+    }
+}
+
 pub struct Semitones {
     source: Simple,
     detune: i32,
