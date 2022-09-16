@@ -2,4 +2,5 @@
 Cargo.lock
 *.ppm
 *.pcm
+*.wav
 *.svg

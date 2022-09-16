@@ -9,7 +9,7 @@ use envelope::*;
 
 use note::Note;
 
-const SAMPLE_RATE: i32 = 44100;
+pub const SAMPLE_RATE: i32 = 44100;
 
 pub struct Instrument {
     generator: Box<dyn Generator>,
