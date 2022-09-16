@@ -38,6 +38,7 @@ impl Signal for Semitones {
 
 impl Synth for Semitones {
     fn preprocess_note(&self, note: Note) -> Note {
+        // TODO: needs to go into note itself
         if let Note::Tone(pitch, octave, v) = note {
             let coct = octave as i32;
             let cpit = pitch as i32;

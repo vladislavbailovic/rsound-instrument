@@ -4,7 +4,7 @@ use note::*;
 #[cfg(feature = "graph")]
 use graph::svg::Renderer;
 #[cfg(feature = "graph")]
-use graph::writer::{FileWriter, Writer};
+use graph::writer::{FileWriter, ImageWriter};
 #[cfg(feature = "graph")]
 use graph::{Block, Graph, Line};
 
@@ -27,7 +27,7 @@ fn main() -> std::io::Result<()> {
     let hits = Line::new(&values);
     let w = FileWriter::new("foo.svg");
     let renderer = Renderer::new(&hits.size());
-    w.write(renderer, hits)?;
+    w.write_image(renderer, hits)?;
 
     Ok(())
 }
