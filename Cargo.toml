@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 note = { version="^0", path="../rsound-note" }
 graph = { version="^0", path="../rsound-graph", optional=true }
+rsound-output = { version="^0", path="../rsound-output", optional=true }
 
 [features]
-default=["graph"]
+default=["graph", "rsound-output"]
