@@ -3,6 +3,38 @@ use instrument::*;
 use note::*;
 use rsound_output::{Buffer, FileWriter, OutputRenderer, Writer};
 
+// https://stackoverflow.com/a/12370312
+// http://soundfile.sapp.org/doc/WaveFormat/
+// https://doc.rust-lang.org/std/primitive.u8.html#method.to_le
+
+struct WaveRenderer {
+    pcm: PcmRenderer,
+}
+
+impl WaveRenderer {
+    pub fn new(raw: &[f64]) -> Self {
+        Self{ pcm: PcmRenderer::new(raw) }
+    }
+}
+
+impl Buffer for WaveRenderer {
+    fn get_buffer(&self) -> &[u8] {
+        &self.pcm.buffer
+    }
+}
+
+impl OutputRenderer for WaveRenderer {
+    fn get_header(&self) -> Option<Vec<u8>> {
+        let header = vec![0u8; 44];
+        Some(header)
+    }
+    fn get_footer(&self) -> Option<Vec<u8>> {
+        None
+    }
+}
+
+// -------------------------------
+
 struct PcmRenderer {
     buffer: Vec<u8>,
 }
@@ -84,8 +116,10 @@ fn rack(note: Note) -> Vec<f64> {
 fn main() -> std::io::Result<()> {
     let sound = chain(note![A: C2, 1 / 2]);
 
-    let renderer = PcmRenderer::new(&sound);
-    let w = FileWriter::new("foo.pcm");
+    // let renderer = PcmRenderer::new(&sound);
+    // let w = FileWriter::new("foo.pcm");
+    let renderer = WaveRenderer::new(&sound);
+    let w = FileWriter::new("foo.wav");
     w.write(renderer)?;
 
     Ok(())
