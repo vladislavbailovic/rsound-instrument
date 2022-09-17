@@ -3,10 +3,6 @@ use instrument::*;
 use note::*;
 use rsound_output::{Buffer, FileWriter, OutputRenderer, Writer};
 
-// https://stackoverflow.com/a/12370312
-// http://soundfile.sapp.org/doc/WaveFormat/
-// https://doc.rust-lang.org/std/primitive.u8.html#method.to_le
-
 struct WaveRenderer {
     pcm: PcmRenderer,
 }
@@ -26,6 +22,7 @@ impl Buffer for WaveRenderer {
 }
 
 impl OutputRenderer for WaveRenderer {
+    /// As per: http://soundfile.sapp.org/doc/WaveFormat/
     fn get_header(&self) -> Option<Vec<u8>> {
         use std::io::Write;
 
