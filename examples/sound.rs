@@ -40,7 +40,7 @@ impl OutputRenderer for WaveRenderer {
         buf.write(b"RIFF");
 
         assert_eq!(buf.len(), 4, "4|4|ChunkSize|44 + SubChunk2Size");
-        buf.write(&(fsize as i32).to_le_bytes());
+        buf.write(&(fsize as u32).to_le_bytes());
 
         assert_eq!(buf.len(), 8, "8|4|Format|Contains the letters 'WAVE'");
         buf.write(b"WAVE");
@@ -74,14 +74,14 @@ impl OutputRenderer for WaveRenderer {
             32,
             "32|2|BlockAlign|== NumChannels * BitsPerSample/8"
         );
-        buf.write(&(block_align as i16).to_le_bytes());
+        buf.write(&(block_align as u16).to_le_bytes());
 
         assert_eq!(
             buf.len(),
             34,
             "34|2|BitsPerSample|8 bits = 8, 16 bits = 16, etc."
         );
-        buf.write(&(bits_per_sample as i16).to_le_bytes());
+        buf.write(&(bits_per_sample as u16).to_le_bytes());
 
         assert_eq!(
             buf.len(),
