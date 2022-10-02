@@ -3,12 +3,12 @@ name = "instrument"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 note = { version="^0", path="../rsound-note" }
 graph = { version="^0", path="../rsound-graph", optional=true }
 rsound-output = { version="^0", path="../rsound-output", optional=true }
+wasm-bindgen = { version = "0.2", optional=true }
 
 [features]
 default=["graph", "rsound-output"]
+wasm = ["wasm-bindgen"]

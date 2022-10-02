@@ -1,5 +1,9 @@
 use std::f64::consts::PI;
 
+#[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
 #[derive(Debug)]
 pub enum Oscillator {
     Sine,
