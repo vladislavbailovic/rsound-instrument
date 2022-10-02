@@ -2,6 +2,7 @@ use crate::envelope;
 use crate::oscillator::Osc;
 use crate::Signal;
 
+#[derive(Debug)]
 pub struct LFO {
     shape: Osc,
 }

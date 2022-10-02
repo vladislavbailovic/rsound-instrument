@@ -4,7 +4,7 @@ use std::f64::consts::PI;
 use wasm_bindgen::prelude::*;
 
 #[cfg_attr(feature = "wasm", wasm_bindgen)]
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Oscillator {
     Sine,
     Square,
