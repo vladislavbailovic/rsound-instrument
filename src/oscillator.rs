@@ -22,6 +22,17 @@ impl Oscillator {
     }
 }
 
+impl From<i32> for Oscillator {
+    fn from(x: i32) -> Self {
+        match x {
+            1 => Self::Square,
+            2 => Self::Triangle,
+            3 => Self::Saw,
+            _ => Self::Sine,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum Osc {
     Sine(f64),
