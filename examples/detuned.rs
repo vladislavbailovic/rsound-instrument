@@ -10,7 +10,7 @@ use graph::{Block, Graph, Line};
 
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
-    let e1 = envelope::Relative::new(0.05, 0.05);
+    let e1 = envelope::RAR::new(0.05, 0.05);
 
     let mut rack = Rack::default();
     let s1 = Instrument::new(generator::simple::Simple::default(), e1);
