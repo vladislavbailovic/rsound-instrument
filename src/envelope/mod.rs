@@ -1,5 +1,5 @@
 pub trait Envelope {
-    fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64;
+    fn value_at(&self, t: f64, volume: f64) -> f64;
     fn min(&self) -> f64;
 }
 
@@ -16,11 +16,11 @@ impl<T> Envelope for T
 where
     T: Delayed,
 {
-    fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
+    fn value_at(&self, t: f64, volume: f64) -> f64 {
         if t < self.get_delay() {
             0.0
         } else {
-            self.get_inner().value_at(t, volume, duration)
+            self.get_inner().value_at(t, volume)
         }
     }
 
@@ -32,7 +32,7 @@ where
 pub struct Fixed;
 
 impl Envelope for Fixed {
-    fn value_at(&self, _t: f64, volume: f64, _duration: f64) -> f64 {
+    fn value_at(&self, _t: f64, volume: f64) -> f64 {
         volume
     }
 
@@ -66,7 +66,7 @@ impl Relative for RAR {
 }
 
 impl Envelope for RAR {
-    fn value_at(&self, t: f64, volume: f64, _duration: f64) -> f64 {
+    fn value_at(&self, t: f64, volume: f64) -> f64 {
         if t < self.attack {
             return volume * (t / self.attack);
         }
@@ -122,7 +122,7 @@ impl ASR {
     }
 }
 impl Envelope for ASR {
-    fn value_at(&self, t: f64, volume: f64, _duration: f64) -> f64 {
+    fn value_at(&self, t: f64, volume: f64) -> f64 {
         if t < self.attack {
             return volume * (t / self.attack);
         }

@@ -29,7 +29,6 @@ impl Instrument {
     }
 
     pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
-        let duration = note.secs(bpm);
         self.generator
             .play(bpm, note)
             .iter()
@@ -37,7 +36,7 @@ impl Instrument {
             .map(|(i, x)| {
                 let env = self
                     .envelope
-                    .value_at(i as f64 / SAMPLE_RATE as f64, volume, duration);
+                    .value_at(i as f64 / SAMPLE_RATE as f64, volume);
                 env * x
             })
             .collect()

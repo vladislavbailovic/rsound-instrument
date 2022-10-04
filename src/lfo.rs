@@ -82,6 +82,6 @@ impl Signal for ELFO {
             t
         };
 
-        self.envelope.value_at(diff, 1.0, cycle_length) * self.lfo.value_at(t, frequency)
+        self.envelope.value_at(diff, 1.0) * self.lfo.value_at(t, frequency)
     }
 }
