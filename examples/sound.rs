@@ -4,15 +4,15 @@ use note::*;
 use rsound_output::{audio::WaveRenderer, FileWriter, Writer};
 
 fn sine(note: Note) -> Vec<f64> {
-    let envelope = envelope::ASR::new(0.015, 0.07);
+    let envelope = envelope::Relative::new(0.015, 0.07);
     let synth = Instrument::new(generator::simple::Simple::default(), envelope);
     synth.play(90.0, note, 1.0)
 }
 
 fn chain(note: Note) -> Vec<f64> {
-    let envelope = envelope::ASR::new(0.015, 0.07);
+    let envelope = envelope::Relative::new(0.015, 0.07);
     let mut chain = generator::chain::Chain::new(Oscillator::Square);
-    let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::ASR::new(0.0, 0.15));
+    let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::Relative::new(0.0, 0.15));
     chain.add(lfo::LFO::sine(12.0));
     chain.sub(lfo::LFO::triangle(131.0));
     chain.sub(elfo);
@@ -21,7 +21,7 @@ fn chain(note: Note) -> Vec<f64> {
 }
 
 fn detuned(note: Note) -> Vec<f64> {
-    let e1 = envelope::ASR::new(0.05, 0.05);
+    let e1 = envelope::Relative::new(0.05, 0.05);
 
     let mut rack = Rack::default();
     let s1 = Instrument::new(generator::simple::Simple::default(), e1);
@@ -38,8 +38,8 @@ fn detuned(note: Note) -> Vec<f64> {
 }
 
 fn rack(note: Note) -> Vec<f64> {
-    let e1 = envelope::ASR::new(0.0, 0.1);
-    let e2 = envelope::ASR::new(0.1, 0.0);
+    let e1 = envelope::Relative::new(0.0, 0.1);
+    let e2 = envelope::Relative::new(0.1, 0.0);
 
     let mut rack = Rack::default();
     let s1 = Instrument::new(generator::simple::Simple::default(), e1);

@@ -11,8 +11,8 @@ use graph::{Block, Graph, Line};
 
 #[cfg(feature = "graph")]
 fn main() -> std::io::Result<()> {
-    let e1 = envelope::ASR::new(0.0, 0.1);
-    let e2 = envelope::ASR::new(0.1, 0.0);
+    let e1 = envelope::Relative::new(0.0, 0.1);
+    let e2 = envelope::Relative::new(0.1, 0.0);
 
     let mut rack = Rack::default();
     let s1 = Instrument::new(generator::simple::Simple::default(), e1);
@@ -20,9 +20,9 @@ fn main() -> std::io::Result<()> {
     let s2 = Instrument::new(generator::simple::Simple::square(), e2);
     rack.add(s2);
 
-    let envelope = envelope::ASR::new(0.015, 0.07);
+    let envelope = envelope::Relative::new(0.015, 0.07);
     let mut chain = generator::chain::Chain::new(Oscillator::Square);
-    let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::ASR::new(0.0, 0.15));
+    let elfo = lfo::ELFO::triangle(31.0).with_envelope(envelope::Relative::new(0.0, 0.15));
     chain.add(lfo::LFO::sine(12.0));
     chain.sub(lfo::LFO::triangle(131.0));
     chain.sub(elfo);

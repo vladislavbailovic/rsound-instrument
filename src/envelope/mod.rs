@@ -15,18 +15,18 @@ impl Envelope for Fixed {
     }
 }
 
-pub struct ASR {
+pub struct Relative {
     attack: f64,
     release: f64,
 }
 
-impl ASR {
+impl Relative {
     pub fn new(attack: f64, release: f64) -> Self {
         Self { attack, release }
     }
 }
 
-impl Envelope for ASR {
+impl Envelope for Relative {
     fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
         if t < self.attack {
             return volume * (t / self.attack);
@@ -46,19 +46,19 @@ impl Envelope for ASR {
     }
 }
 
-pub struct DASR {
+pub struct DRelative {
     delay: f64,
-    asr: ASR,
+    asr: Relative,
 }
 
-impl DASR {
+impl DRelative {
     pub fn new(delay: f64, attack: f64, release: f64) -> Self {
-        let asr = ASR::new(attack, release);
+        let asr = Relative::new(attack, release);
         Self { delay, asr }
     }
 }
 
-impl Envelope for DASR {
+impl Envelope for DRelative {
     fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
         if t < self.delay {
             0.0
