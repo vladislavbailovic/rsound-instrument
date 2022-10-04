@@ -8,6 +8,10 @@ pub trait Delayed {
     fn get_inner(&self) -> &dyn Envelope;
 }
 
+pub trait Relative {
+    fn set_duration(&mut self, d: f64) -> &mut Self;
+}
+
 impl<T> Envelope for T
 where
     T: Delayed,
@@ -37,26 +41,39 @@ impl Envelope for Fixed {
     }
 }
 
-pub struct Relative {
+pub struct RAR {
     attack: f64,
     release: f64,
+    duration: f64,
 }
 
-impl Relative {
+impl RAR {
     pub fn new(attack: f64, release: f64) -> Self {
-        Self { attack, release }
+        let duration = attack + release;
+        Self {
+            attack,
+            release,
+            duration,
+        }
     }
 }
 
-impl Envelope for Relative {
-    fn value_at(&self, t: f64, volume: f64, duration: f64) -> f64 {
+impl Relative for RAR {
+    fn set_duration(&mut self, d: f64) -> &mut Self {
+        self.duration = d;
+        self
+    }
+}
+
+impl Envelope for RAR {
+    fn value_at(&self, t: f64, volume: f64, _duration: f64) -> f64 {
         if t < self.attack {
             return volume * (t / self.attack);
         }
 
-        let minr = duration - self.release;
+        let minr = self.duration - self.release;
         if t > minr {
-            let posr = duration - t;
+            let posr = self.duration - t;
             return volume * (posr / self.release);
         }
 
@@ -64,23 +81,23 @@ impl Envelope for Relative {
     }
 
     fn min(&self) -> f64 {
-        self.attack + self.release
+        self.duration.max(self.attack + self.release)
     }
 }
 
-pub struct DRelative {
+pub struct DRAR {
     delay: f64,
-    inner: Relative,
+    inner: RAR,
 }
 
-impl DRelative {
+impl DRAR {
     pub fn new(delay: f64, attack: f64, release: f64) -> Self {
-        let inner = Relative::new(attack, release);
+        let inner = RAR::new(attack, release);
         Self { delay, inner }
     }
 }
 
-impl Delayed for DRelative {
+impl Delayed for DRAR {
     fn get_delay(&self) -> f64 {
         self.delay
     }
