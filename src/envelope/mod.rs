@@ -8,7 +8,7 @@ pub trait Delayed {
     fn get_inner(&self) -> &dyn Envelope;
 }
 
-pub trait Relative {
+pub trait Relative: Envelope {
     fn set_duration(&mut self, d: f64) -> &mut Self;
 }
 
@@ -127,12 +127,17 @@ impl Envelope for ASR {
             return volume * (t / self.attack);
         }
 
-        if t > self.sustain + self.release {
-            let posr = (self.sustain + self.release) - t;
+        if t > self.attack && t < self.attack + self.sustain {
+            return volume;
+        }
+
+        let duration = self.min();
+        if t >= self.sustain && t < duration {
+            let posr = duration - t;
             return volume * (posr / self.release);
         }
 
-        volume
+        0.0
     }
 
     fn min(&self) -> f64 {
@@ -143,6 +148,12 @@ impl Envelope for ASR {
 pub struct DASR {
     delay: f64,
     inner: ASR,
+}
+impl DASR {
+    pub fn new(delay: f64, attack: f64, sustain: f64, release: f64) -> Self {
+        let inner = ASR::new(attack, sustain, release);
+        Self { delay, inner }
+    }
 }
 impl Delayed for DASR {
     fn get_delay(&self) -> f64 {
