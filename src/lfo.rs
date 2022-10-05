@@ -67,9 +67,13 @@ impl ELFO {
         }
     }
 
-    pub fn with_envelope(mut self, e: impl envelope::Envelope + 'static) -> Self {
-        self.envelope = Box::new(e);
+    pub fn with_env_box(mut self, e: Box<dyn envelope::Envelope>) -> Self {
+        self.envelope = e;
         self
+    }
+
+    pub fn with_envelope(self, e: impl envelope::Envelope + 'static) -> Self {
+        self.with_env_box(Box::new(e))
     }
 }
 

@@ -1,3 +1,6 @@
+#[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
 pub trait Envelope {
     fn value_at(&self, t: f64, volume: f64) -> f64;
     fn min(&self) -> f64;
@@ -29,6 +32,7 @@ where
     }
 }
 
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
 pub struct Fixed;
 
 impl Envelope for Fixed {
@@ -41,6 +45,7 @@ impl Envelope for Fixed {
     }
 }
 
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
 pub struct RAR {
     attack: f64,
     release: f64,
@@ -85,6 +90,7 @@ impl Envelope for RAR {
     }
 }
 
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
 pub struct DRAR {
     delay: f64,
     inner: RAR,
@@ -106,6 +112,8 @@ impl Delayed for DRAR {
     }
 }
 
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
+#[derive(Debug)]
 pub struct ASR {
     attack: f64,
     sustain: f64,
@@ -145,6 +153,7 @@ impl Envelope for ASR {
     }
 }
 
+#[cfg_attr(feature = "wasm", wasm_bindgen)]
 pub struct DASR {
     delay: f64,
     inner: ASR,
