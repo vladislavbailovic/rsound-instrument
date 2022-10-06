@@ -41,11 +41,17 @@ impl Chain {
         }
     }
     pub fn add(&mut self, what: impl Signal + 'static) -> &mut Self {
-        self.mods.push(Operator::Add(Box::new(what)));
+        self.add_box(Box::new(what))
+    }
+    pub fn add_box(&mut self, what: Box<dyn Signal>) -> &mut Self {
+        self.mods.push(Operator::Add(what));
         self
     }
     pub fn sub(&mut self, what: impl Signal + 'static) -> &mut Self {
-        self.mods.push(Operator::Sub(Box::new(what)));
+        self.sub_box(Box::new(what))
+    }
+    pub fn sub_box(&mut self, what: Box<dyn Signal>) -> &mut Self {
+        self.mods.push(Operator::Sub(what));
         self
     }
 }
