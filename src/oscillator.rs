@@ -1,10 +1,13 @@
 use std::f64::consts::PI;
 
 #[cfg(feature = "wasm")]
+use serde::{Deserialize, Serialize};
+#[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
 #[cfg_attr(feature = "wasm", wasm_bindgen)]
-#[derive(Debug, PartialEq)]
+#[cfg_attr(feature = "wasm", derive(Serialize, Deserialize))]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub enum Oscillator {
     Sine,
     Square,
