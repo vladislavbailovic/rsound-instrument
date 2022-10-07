@@ -20,10 +20,11 @@ where
     T: Delayed,
 {
     fn value_at(&self, t: f64, volume: f64) -> f64 {
-        if t < self.get_delay() {
+        let delay = self.get_delay();
+        if t < delay {
             0.0
         } else {
-            self.get_inner().value_at(t, volume)
+            self.get_inner().value_at(t - delay, volume)
         }
     }
 
