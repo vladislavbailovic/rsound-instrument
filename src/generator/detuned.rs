@@ -1,4 +1,5 @@
 use super::*;
+use crate::oscillator::Oscillator;
 use note::*;
 use simple::Simple;
 
@@ -17,11 +18,14 @@ impl Signal for Freq {
 impl Synth for Freq {}
 
 impl Freq {
-    pub fn square(by: f64) -> Self {
+    pub fn new(osc: Oscillator, by: f64) -> Self {
         Self {
-            source: Simple::square(),
+            source: Simple::new(osc),
             detune: by,
         }
+    }
+    pub fn square(by: f64) -> Self {
+        Self::new(Oscillator::Square, by)
     }
 }
 
@@ -74,11 +78,14 @@ impl Synth for Semitones {
 }
 
 impl Semitones {
-    pub fn square(by: i32) -> Self {
+    pub fn new(osc: Oscillator, by: i32) -> Self {
         Self {
-            source: Simple::square(),
+            source: Simple::new(osc),
             detune: by,
         }
+    }
+    pub fn square(by: i32) -> Self {
+        Self::new(Oscillator::Square, by)
     }
 }
 

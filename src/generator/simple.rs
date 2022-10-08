@@ -22,10 +22,12 @@ impl Signal for Simple {
 impl Synth for Simple {}
 
 impl Simple {
+    pub fn new(osc: Oscillator) -> Self {
+        Self { osc }
+    }
+
     pub fn square() -> Self {
-        Self {
-            osc: Oscillator::Square,
-        }
+        Self::new(Oscillator::Square)
     }
 }
 

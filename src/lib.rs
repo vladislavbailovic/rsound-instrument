@@ -27,6 +27,12 @@ impl Instrument {
             envelope: Box::new(envelope),
         }
     }
+    pub fn new_boxed(generator: Box<dyn Generator>, envelope: Box<dyn Envelope>) -> Self {
+        Self {
+            generator,
+            envelope,
+        }
+    }
 
     pub fn play(&self, bpm: f64, note: Note, volume: f64) -> Vec<f64> {
         self.generator
