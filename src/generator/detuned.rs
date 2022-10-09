@@ -10,8 +10,12 @@ pub struct Freq {
 
 impl Signal for Freq {
     fn value_at(&self, t: f64, frequency: f64) -> f64 {
-        let frequency = frequency + self.detune;
-        self.source.value_at(t, frequency)
+        let value = self.source.value_at(t, frequency);
+        if self.detune == 0.0 {
+            return value;
+        }
+        let new_frequency = frequency + self.detune;
+        value + self.source.value_at(t, new_frequency)
     }
 }
 
@@ -33,14 +37,32 @@ pub struct Semitones {
     source: Simple,
     detune: i32,
 }
+impl Synth for Semitones {}
 
 impl Signal for Semitones {
     fn value_at(&self, t: f64, frequency: f64) -> f64 {
-        self.source.value_at(t, frequency)
+        let value = self.source.value_at(t, frequency);
+        if self.detune == 0 {
+            return value;
+        }
+        let base = note::Note::Tone(
+            note::PitchClass::from(0),
+            note::Octave::from(0),
+            val![1 / 4],
+        );
+        let proc = self.preprocess_note(base).freq();
+        if proc.is_none() {
+            return value;
+        }
+        if let Some(base) = base.freq() {
+            let diff = proc.unwrap() - base;
+            value + self.source.value_at(t, frequency + diff)
+        } else {
+            value
+        }
     }
 }
-
-impl Synth for Semitones {
+impl Semitones {
     fn preprocess_note(&self, note: Note) -> Note {
         // TODO: needs to go into note itself
         if let Note::Tone(pitch, octave, v) = note {
